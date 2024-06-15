@@ -33,9 +33,15 @@ const deleteProduct = async (req, res) => {
     res.send({ status: "success", message: "product deleted" })
 }
 
-const insertManyProducts = async (req, res) => {
-    const result = await productsService.insertMany();
-    res.send({ status: "success", message: "products inserted" })
+const Seed = async (req, res) => {
+    try {
+        console.log("🚀 ~ seed ~ req:", req)
+        const result = await productsService.seed();
+        console.log("🚀 ~ Seed ~ result:", result)
+        res.send({ status: "success", message: "products inserted" })
+    } catch (error) {
+        console.log("🚀 ~ Seed ~ error:", error)
+    }
 }
 
 export default {
@@ -44,5 +50,5 @@ export default {
     getProduct,
     updateProduct,
     deleteProduct,
-    insertManyProducts
+    Seed: Seed
 }

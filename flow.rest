@@ -1,4 +1,4 @@
-@url = http://localhost:3000
+@url = http://localhost:5000
 
 POST {{url}}/api/users  
 Content-Type: application/json
@@ -75,4 +75,4 @@ GET {{url}}/api/products/
 @firstProductId = {{products.response.body.payload.0._id}}
 ###
 
-GET {{url}}/api/products/insertion
+GET {{url}}/api/products/seed

@@ -10,4 +10,7 @@ export default class ProductRepository extends GenericRepository {
         return this.getBy({ _id: id })
     }
 
+    seed = () => {
+        return this.dao.seed();
+    }
 }

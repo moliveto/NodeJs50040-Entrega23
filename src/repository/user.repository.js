@@ -14,8 +14,8 @@ export default class UserRepository extends GenericRepository {
         return this.getBy({ _id: id })
     }
 
-    setResetLink = (id, resetLink) => {
-        return this.dao.setResetLink(id, resetLink);
+    SetResetLink = (id, resetLink) => {
+        return this.dao.SetResetLink(id, resetLink);
     }
 
 }

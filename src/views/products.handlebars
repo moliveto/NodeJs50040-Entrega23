@@ -11,7 +11,6 @@
                         precio</a>
                 </th>
                 <th scope="col">Thumbnail</th>
-                <th scope="col">Código</th>
                 <th scope="col">Stock</th>
                 <th scope="col"></th>
             </tr>
@@ -20,12 +19,11 @@
             {{#each docs}}
             <tr>
                 <td>{{this.id}}</td>
-                <td>{{this.title}}</td>
+                <td>{{this.name}}</td>
                 <td>{{this.description}}</td>
                 <td>{{this.price}}</td>
                 <td><img src="{{this.thumbnail}}" class="img-thumbnail" alt="{{this.title}}"></td>
-                <td>{{this.code}}</td>
-                <td>{{this.stock}}</td>
+                <td>{{this.quantity}}</td>
                 <td>
                     <form action="/products/api/cart/{{this.cart}}/product/{{this.id}}" method="post">
                         <button class="btn btn-outline-primary" role="button" name="foo" id="adCart"

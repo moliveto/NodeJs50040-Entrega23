@@ -18,7 +18,7 @@ export default class Users {
         return userModel.findByIdAndUpdate(id, { $set: doc })
     }
 
-    setResetLink = (uid, token) => {
+    SetResetLink = (uid, token) => {
         try {
             return userModel.findByIdAndUpdate(uid, { resetLink: token })
                 .then((res) => {

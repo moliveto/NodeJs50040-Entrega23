@@ -123,8 +123,6 @@ router.get("/products", async (req, res) => {
 
     const sortTogle = (sort) => {
       let srt = parseInt(sort)
-      console.log(srt)
-      console.log(sort)
       if (sort === undefined) return 1
       else { return srt *= -1 }
     }
@@ -144,13 +142,12 @@ router.get("/products", async (req, res) => {
       return {
         id: doc._id,
         cart: cart._id,
-        title: doc.title,
+        name: doc.name,
         description: doc.description,
         category: doc.category,
         thumbnail: doc.thumbnail,
         price: doc.price,
-        stock: doc.stock,
-        code: doc.code
+        quantity: doc.quantity
       }
     })
 

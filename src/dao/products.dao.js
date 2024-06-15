@@ -1,5 +1,5 @@
 import producModel from "../models/product.model.js";
-import { getAllProductsFromJson } from '../data/product-data.js';
+import { generateProduct } from "../seed/generate-products.js";
 
 export default class Products {
 
@@ -23,10 +23,17 @@ export default class Products {
         return producModel.findByIdAndDelete(id);
     }
 
-    async InsertMany() {
+    seed = async () =>{
         try {
-            const productsData = await getAllProductsFromJson();
-            const result = await producModel.insertMany(productsData);
+            let products = [];
+            const MAX_Products = 200;
+            for (let index = 0; index < MAX_Products; index++) {
+                let product = generateProduct();
+                console.log("🚀 ~ Products ~ Seed ~ product:", product)
+                products.push(product);
+            }
+            console.log("🚀 ~ Products ~ Seed ~ products:", products)
+            const result = await producModel.insertMany(products);
             return result;
         } catch (error) {
             throw new Error(`Error en insersion masiva de productos ${error}`);
