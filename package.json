@@ -7,8 +7,9 @@
   "scripts": {
     "start:dev": "cross-env NODE_ENV=dev nodemon ./src/app",
     "start:qa": "cross-env NODE_ENV=qa nodemon ./src/app",
-    "start:prod": "cross-env NODE_ENV=prod nodemon ./src/app",
-    "test": "mocha test/supertest.test.js"
+    "start:prod": "cross-env NODE_ENV=production nodemon ./src/app",
+    "test": "jest --config ./jest.config.json",
+    "test:watch": "npm run test -- ----watchAll"
   },
   "keywords": [],
   "author": "",

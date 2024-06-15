@@ -40,7 +40,10 @@ router.post('/login', async (req, res, next) => {
     age,
     role,
     carts,
+    _id
   } = findUser;
+
+  await userModel.findByIdAndUpdate(_id, { last_connection: Date.now() });
 
   const token = await generateJWT({
     first_name,
@@ -49,7 +52,7 @@ router.post('/login', async (req, res, next) => {
     age,
     role,
     carts,
-    id: findUser._id,
+    id: _id
   });
 
   res.cookie('token', token, { httpOnly: true });
@@ -63,7 +66,9 @@ router.get('/profile', authenticate, async (req, res) => {
   res.render('profile', { user: user });
 });
 
-router.get('/logout', async (req, res) => {
+router.get('/logout', authenticate, async (req, res) => {
+  const user = req.user;
+  await userModel.findByIdAndUpdate(user.id, { last_connection: Date.now() });
   res.clearCookie('token');
   res.redirect('/login');
 });
