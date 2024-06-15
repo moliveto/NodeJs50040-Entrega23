@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h1 class="text-center mb-4">Inicio de Sesion</h1>
+      <form action="/login" method="post" class="p-4 border rounded-3 bg-light">
+        <div class="mb-3">
+          <label for="email" class="form-label">Correo</label>
+          <input type="email" name="email" id="email" class="form-control"
+            placeholder="introduzca su correo electronico" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input type="password" name="password" id="password" class="form-control"
+            placeholder="introduzca su contrasena" required>
+        </div>
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary">Iniciar Sesion</button>
+        </div>
+      </form>
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="col">
+          <h5><a href="/" class="text-decoration-none">Home</a></h5>
+        </div>
+        <div class="col">
+          <h5><a href="/forgotpassword" class="text-decoration-none">Olvide</a></h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

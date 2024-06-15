@@ -1,0 +1,59 @@
+{{!-- {{console.log(products)}} --}}
+<div class="container mt-5">
+    <table id="productsTable" class="table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Título</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Precio
+                    <a href="/products?page={{page}}&sort={{sort}}" class="btn btn-outline-primary btn-sm">Ordenar
+                        precio</a>
+                </th>
+                <th scope="col">Thumbnail</th>
+                <th scope="col">Código</th>
+                <th scope="col">Stock</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each docs}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.price}}</td>
+                <td><img src="{{this.thumbnail}}" class="img-thumbnail" alt="{{this.title}}"></td>
+                <td>{{this.code}}</td>
+                <td>{{this.stock}}</td>
+                <td>
+                    <form action="/products/api/cart/{{this.cart}}/product/{{this.id}}" method="post">
+                        <button class="btn btn-outline-primary" role="button" name="foo" id="adCart"
+                            value="Agregar al Carrito">
+                            Agregar al carrito
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<br>
+
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="/" class="text-dark text-decoration-none">Home</a>
+            </div>
+            <div class="col-auto">
+                <a href="/profile/" class="text-dark text-decoration-none">Profile</a>
+            </div>
+            <div class="col-auto">
+                <a href="/api/session/logout" class="text-dark text-decoration-none">Logout</a>
+            </div>
+        </div>
+    </div>
+</footer>
