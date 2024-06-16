@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import usersController from '../controllers/users.controller.js';
+import handlePolicies from "../middleware/handle-policies.middleware.js"
 
 const router = Router();
 
@@ -154,5 +155,7 @@ router.delete('/:uid', usersController.deleteUser);
 router.post("/resetpassword", usersController.forgotPassword)
 
 router.post("/updatepassword/:token", usersController.updatePassword)
+
+router.post("/premium/:uid", handlePolicies(['ADMIN']), usersController.togglePremiumCtrl)
 
 export default router;

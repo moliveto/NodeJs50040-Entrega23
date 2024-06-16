@@ -94,6 +94,19 @@ const updatePassword = async (req, res) => {
     }
 }
 
+const togglePremiumCtrl = async(req,res) => {
+    userService.togglePremium(req.params.uid)
+    .then(user => {
+      if (user.role === "ADMIN"){
+        res.status(400).json({status: "error", message: "No se puede cambiar el rol de un ADMIN"});
+      }
+      res.status(200).json({status: "ok", message: `El Rol fue cambiado a ${user.role} con exito `});
+      })
+    .catch(err => {
+      res.status(400).json({status: "error", message: err.message});
+    });
+  }
+
 
 export default {
     deleteUser,
@@ -102,5 +115,6 @@ export default {
     getUser,
     updateUser,
     forgotPassword,
-    updatePassword
+    updatePassword,
+    togglePremiumCtrl
 }
