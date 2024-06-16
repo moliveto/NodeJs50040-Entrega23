@@ -4,6 +4,10 @@ export default class GenericRepository {
         this.dao = dao;
     }
 
+    findOne = (id) => {
+        return this.dao.findOne(id);
+    }
+
     getAll = (params) => {
         return this.dao.get(params);
     }

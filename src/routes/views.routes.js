@@ -3,7 +3,7 @@ import passport from 'passport';
 import { isValidPasswd } from "../utils/encrypt.js";
 import userModel from "../models/users.model.js";
 import { generateJWT } from "../utils/jwt.js";
-
+import { usersService } from "../services/index.js"
 import ProductsModel from "../models/product.model.js"
 import CartModel from '../models/carts.model.js';
 
@@ -79,18 +79,8 @@ router.get('/register', (req, res) => {
 
 router.post("/register", async (req, res) => {
   try {
-    const { first_name, last_name, email, age, password, role } = req.body;
-
-    const newUser = await userModel.create({
-      first_name,
-      last_name,
-      email,
-      age,
-      role,
-      password: password,
-    });
-
-    // TODO: Validar que se creo correctamente
+    console.log("🚀 ~ router.post ~ req:", req.body)
+    const newUser = await usersService.createUser(req.body);
     if (!newUser) {
       // Manejar el error
     }
@@ -119,6 +109,9 @@ router.get('/updatepassword/:token', (req, res) => {
 // vista de productos en handlebars con boton comprar
 router.get("/products", authenticate, async (req, res) => {
   const user = req.user;
+  const userDb = await usersService.findOne(user.id);
+  const cartId = userDb.carts[0].cart;
+
   console.log("🚀 ~ router.get ~ user:", user)
   const { page = 1, limit = 10, sort, filter } = req.query;
   try {
@@ -143,7 +136,7 @@ router.get("/products", authenticate, async (req, res) => {
     const products = response.docs.map(doc => {
       return {
         id: doc._id,
-        cart: cart._id,
+        cart: cartId,
         name: doc.name,
         description: doc.description,
         category: doc.category,
@@ -157,7 +150,6 @@ router.get("/products", authenticate, async (req, res) => {
     res.render("products", {
       title: "Practica Integradora 3",
       docs: products,
-      user: user,
       page: response.page,
       sort: sorting,
       nextPage: response.nextPage,

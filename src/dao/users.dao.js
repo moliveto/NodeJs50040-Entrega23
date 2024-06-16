@@ -2,6 +2,10 @@ import userModel from "../models/users.model.js";
 
 export default class Users {
 
+    findOne = (id) => {
+        return userModel.findOne({ _id: id });
+    }
+
     get = (params) => {
         return userModel.find(params);
     }
