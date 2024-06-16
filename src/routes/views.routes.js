@@ -117,8 +117,10 @@ router.get('/updatepassword/:token', (req, res) => {
 
 
 // vista de productos en handlebars con boton comprar
-router.get("/products", async (req, res) => {
-  const { page = 1, limit = 10, sort, filter } = req.query
+router.get("/products", authenticate, async (req, res) => {
+  const user = req.user;
+  console.log("🚀 ~ router.get ~ user:", user)
+  const { page = 1, limit = 10, sort, filter } = req.query;
   try {
 
     const sortTogle = (sort) => {
@@ -155,6 +157,7 @@ router.get("/products", async (req, res) => {
     res.render("products", {
       title: "Practica Integradora 3",
       docs: products,
+      user: user,
       page: response.page,
       sort: sorting,
       nextPage: response.nextPage,

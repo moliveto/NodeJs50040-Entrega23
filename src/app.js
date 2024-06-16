@@ -1,4 +1,5 @@
 import express from 'express';
+import compression from "express-compression";
 import { engine } from "express-handlebars"
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
@@ -25,6 +26,12 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  compression({
+    brotli: { enabled: true, zlib: {} },
+  })
+);
+
 
 const specs = swaggerJsDoc(swaggerOpts);
 app.use(
