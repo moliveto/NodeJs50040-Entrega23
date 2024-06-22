@@ -32,12 +32,11 @@ app.use(
   })
 );
 
-
 const specs = swaggerJsDoc(swaggerOpts);
 app.use(
-    "/docs",
-    swaggerUi.serve,
-    swaggerUi.setup(specs, { explorer: true })
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
 );
 
 initializePassport();
@@ -52,6 +51,6 @@ app.use('/api/products', productsRouter);
 app.use("/", viewsRoutes);
 
 const httpServer = app.listen(PORT, () => {
-    displayRoutes(app);
-    console.log(`Listening on ${PORT}, enviroment: ${process.env.NODE_ENV} persistence: ${PERSISTENCE}`);
+  displayRoutes(app);
+  console.log(`Listening on ${PORT}, enviroment: ${process.env.NODE_ENV} persistence: ${PERSISTENCE}`);
 });

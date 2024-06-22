@@ -5,6 +5,146 @@ const router = Router();
 
 /**
  * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Returns the list of all the products
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: The list of the products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
+router.get('/', productsController.getAllProducts);
+
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Create a new product
+ *     tags: [Products]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       200:
+ *         description: The product was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       500:
+ *         description: Some server error
+ */
+router.post('/', productsController.createProduct);
+
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   get:
+ *     summary: Get the product by id
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The product id
+ *     responses:
+ *       200:
+ *         description: The product description by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: The product was not found
+ */
+router.get('/:uid', productsController.getProduct);
+
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   put:
+ *     summary: Update the product by the id
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The product id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       200:
+ *         description: The product was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: The product was not found
+ *       500:
+ *         description: Some error happened in server
+ */
+router.put('/:uid', productsController.updateProduct);
+
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   delete:
+ *     summary: Remove the product by id
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The product id
+ *     responses:
+ *       200:
+ *         description: The product was deleted
+ *       404:
+ *         description: The product was not found
+ *       500:
+ *         description: Some error happened in server
+ */
+router.delete('/:uid', productsController.deleteProduct);
+
+/**
+ * @swagger
+ * /api/products/seed:
+ *   get:
+ *     summary: Seed the database
+ *     description: This endpoint seeds the database with initial product data.
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: Database seeded successfully
+ *       500:
+ *         description: Error occurred while seeding the database
+ */
+router.get('/seed', productsController.Seed);
+
+export default router;
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Product:
@@ -46,130 +186,3 @@ const router = Router();
  *         thumbnail: "cocacola.jpg"
  *         status: true
  */
-
-/**
- * @swagger
- * /api/products:
- *   get:
- *     summary: Returns the list of all the products
- *     tags: [Products]
- *     responses:
- *       200:
- *         description: The list of the products
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Product'
- */
-
-/**
- * @swagger
- * /api/products/{id}:
- *   get:
- *     summary: Get the product by id
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The product id
- *     responses:
- *       200:
- *         description: The product description by id
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Product'
- *       404:
- *         description: The product was not found
- */
-
-/**
- * @swagger
- * /api/products:
- *   post:
- *     summary: Create a new product
- *     tags: [Products]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       200:
- *         description: The product was successfully created
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Product'
- *       500:
- *         description: Some server error
- */
-
-/**
- * @swagger
- * /api/products/{id}:
- *   put:
- *     summary: Update the product by the id
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The product id
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       200:
- *         description: The product was updated
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Product'
- *       404:
- *         description: The product was not found
- *       500:
- *         description: Some error happened in server
- */
-
-/**
- * @swagger
- * /api/products/{id}:
- *   delete:
- *     summary: Remove the product by id
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The product id
- *     responses:
- *       200:
- *         description: The product was deleted
- *       404:
- *         description: The product was not found
- *       500:
- *         description: Some error happened in server
- */
-router.get('/', productsController.getAllProducts);
-router.post('/', productsController.createProduct);
-router.get('/seed', productsController.Seed);
-router.get('/:uid', productsController.getProduct);
-router.put('/:uid', productsController.updateProduct);
-router.delete('/:uid', productsController.deleteProduct);
-
-
-export default router;
