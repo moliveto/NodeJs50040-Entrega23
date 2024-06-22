@@ -12,7 +12,7 @@ export const swaggerOpts = {
             },
             contact: {
                 name: "Marcelo",
-                url: "https://marcelo.com",
+                url: "http://localhost:5000",
                 email: "info@email.com",
             },
         },

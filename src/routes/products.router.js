@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { handlePolicies, productMdwPremium } from '../middleware/handle-policies.middleware.js';
 import productsController from '../controllers/products.controller.js';
 
 const router = Router();
@@ -19,7 +20,7 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Product'
  */
-router.get('/', productsController.getAllProducts);
+router.get('/', handlePolicies(['admin', 'user', 'premium', 'public']), productsController.getAllProducts);
 
 /**
  * @swagger
@@ -43,7 +44,7 @@ router.get('/', productsController.getAllProducts);
  *       500:
  *         description: Some server error
  */
-router.post('/', productsController.createProduct);
+router.post('/', handlePolicies(['admin', 'premium']), productsController.createProduct);
 
 /**
  * @swagger
@@ -68,7 +69,7 @@ router.post('/', productsController.createProduct);
  *       404:
  *         description: The product was not found
  */
-router.get('/:uid', productsController.getProduct);
+router.get('/:uid', handlePolicies('public'), productsController.getProduct);
 
 /**
  * @swagger
@@ -101,7 +102,7 @@ router.get('/:uid', productsController.getProduct);
  *       500:
  *         description: Some error happened in server
  */
-router.put('/:uid', productsController.updateProduct);
+router.put('/:uid', productMdwPremium, productsController.updateProduct);
 
 /**
  * @swagger
@@ -124,7 +125,7 @@ router.put('/:uid', productsController.updateProduct);
  *       500:
  *         description: Some error happened in server
  */
-router.delete('/:uid', productsController.deleteProduct);
+router.delete('/:uid', productMdwPremium, productsController.deleteProduct);
 
 /**
  * @swagger
