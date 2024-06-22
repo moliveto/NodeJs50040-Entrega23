@@ -28,13 +28,13 @@ const updateUser = async (req, res) => {
     const user = await usersService.getUserById(userId);
     if (!user) return res.status(404).send({ status: "error", error: "User not found" })
     const result = await usersService.update(userId, updateBody);
-    res.send({ status: "success", message: "User updated" })
+    res.send({ status: "success", payload: result })
 }
 
 const deleteUser = async (req, res) => {
     const userId = req.params.uid;
-    const user = await usersService.delete(userId);
-    res.send({ status: "success", message: "User deleted" })
+    const result = await usersService.delete(userId);
+    res.send({ status: "success", payload: result })
 }
 
 const forgotPassword = async (req, res) => {
@@ -94,18 +94,18 @@ const updatePassword = async (req, res) => {
     }
 }
 
-const togglePremiumCtrl = async(req,res) => {
+const togglePremiumCtrl = async (req, res) => {
     userService.togglePremium(req.params.uid)
-    .then(user => {
-      if (user.role === "ADMIN"){
-        res.status(400).json({status: "error", message: "No se puede cambiar el rol de un ADMIN"});
-      }
-      res.status(200).json({status: "ok", message: `El Rol fue cambiado a ${user.role} con exito `});
-      })
-    .catch(err => {
-      res.status(400).json({status: "error", message: err.message});
-    });
-  }
+        .then(user => {
+            if (user.role === "ADMIN") {
+                res.status(400).json({ status: "error", message: "No se puede cambiar el rol de un ADMIN" });
+            }
+            res.status(200).json({ status: "ok", message: `El Rol fue cambiado a ${user.role} con exito ` });
+        })
+        .catch(err => {
+            res.status(400).json({ status: "error", message: err.message });
+        });
+}
 
 
 export default {
