@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { handlePolicies, productMdwPremium } from '../middleware/auth.middleware.js';
+import { createProductDTO } from "../dto/product.dto.js";
 import productsController from '../controllers/products.controller.js';
 
 const router = Router();
@@ -44,7 +45,7 @@ router.get('/', handlePolicies(['admin', 'user', 'premium', 'public']), products
  *       500:
  *         description: Some server error
  */
-router.post('/', handlePolicies(['admin', 'premium']), productsController.createProduct);
+router.post('/', handlePolicies(['admin', 'premium']), createProductDTO, productsController.createProduct);
 
 /**
  * @swagger
