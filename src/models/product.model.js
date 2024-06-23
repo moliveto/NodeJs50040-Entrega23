@@ -15,9 +15,15 @@ const schema = new mongoose.Schema({
 },
   {
     timestamps: true, // Automatically adds timestamps for created/updated at
+    strictPopulate: false, // Allows populating paths not specified in the schema
   });
 
 schema.plugin(mongoosePaginate);
+
+schema.pre("find", function () {
+  this.populate("users.owner");
+});
+
 const collection = "products";
 const productModel = mongoose.model(collection, schema);
 

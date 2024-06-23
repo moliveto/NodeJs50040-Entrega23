@@ -21,6 +21,7 @@ const ticketSchema = new Schema({
 },
     {
         timestamps: true, // Automatically adds timestamps for created/updated at
+        strictPopulate: false, // Allows populating paths not specified in the schema
     });
 
 schema.pre('findOne', function () {
