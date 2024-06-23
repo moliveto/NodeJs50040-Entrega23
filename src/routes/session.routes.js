@@ -17,13 +17,4 @@ router.post('/login', passport.authenticate('login', {
 // Logout route
 router.get('/logout', logoutUser);
 
-// Current user route
-router.get('/current', requireAuth, userController.current);
-
-// Reset password route
-router.post('/resetpassword', userController.resetPassword);
-
-// Update password route
-router.post('/updatepassword', requireAuth, userController.updatePassword);
-
 export default router;

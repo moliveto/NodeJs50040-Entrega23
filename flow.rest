@@ -43,7 +43,8 @@ PUT {{url}}/api/users/{{firstUserId}}
 Content-Type: application/json
 
 {
-  "first_name": "Juan Ana"
+  "first_name": "Juan Ana",
+  "role": "premium"
 }
 ###
 

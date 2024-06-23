@@ -7,8 +7,12 @@ const getAllProducts = async (req, res) => {
 
 const createProduct = async (req, res) => {
     const product = req.body;
+    const owner = req.user;
+    console.log("🚀 ~ createProduct ~ owner:", owner)
+    product.owner = owner.id;
+    console.log("🚀 ~ createProduct ~ product:", product)
     const newProduct = await productsService.create(product);
-    res.send({ status: "success", message: "User created", payload: newProduct })
+    res.send({ status: "success", message: "product created", payload: newProduct })
 }
 
 const getProduct = async (req, res) => {
