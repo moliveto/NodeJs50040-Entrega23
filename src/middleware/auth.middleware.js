@@ -1,21 +1,16 @@
 import passport from "passport";
 import { productsService } from "../services/index.js"
 
-function handlePolicies(policies) {
+function authMdw(role) {
   return (req, res, next) => {
-    // Verificar si la única política es "public"
-    if (policies.length === 1 && policies[0] === "public") {
+
+    if (role.length === 1 && role[0] === "PUBLIC") {
       return next();
     }
 
-    // Usar Passport para autenticar al usuario y verificar el rol
-    passport.authenticate("jwt", { session: false }, (err, userJWT, info) => {
-      console.log(
-        "🚀 ~ file: handle-policies.middleware.js:12 ~ passport.authenticate ~ userJWT:",
-        userJWT
-      );
+    passport.authenticate("current", { session: false }, (err, userJWT, info) => {
       if (err) {
-        return next(err);
+        return next(err)
       }
 
       if (!userJWT) {
@@ -24,16 +19,16 @@ function handlePolicies(policies) {
           .send({ message: "Acceso denegado. Token inválido o expirado." });
       }
 
-      if (policies.includes(userJWT.user.role)) {
-        req.user = userJWT;
-        return next();
-      } else {
+      const currentRole = userJWT.role
+      if (!role.includes(currentRole)) {
         return res
-          .status(403)
+          .status(401)
           .send({ message: "Acceso denegado. Rol no autorizado." });
       }
-    })(req, res, next);
-  };
+      req.user = userJWT
+      return next()
+    })(req, res, next)
+  }
 }
 
 function productMdwPremium(req, res, next) {
@@ -72,6 +67,6 @@ function productMdwPremium(req, res, next) {
 }
 
 export {
-  handlePolicies,
+  authMdw as handlePolicies,
   productMdwPremium,
 }

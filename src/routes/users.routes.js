@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import usersController from '../controllers/users.controller.js';
-import { handlePolicies } from '../middleware/handle-policies.middleware.js';
+import { handlePolicies } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

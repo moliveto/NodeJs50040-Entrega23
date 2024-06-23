@@ -4,6 +4,27 @@ import { JWT_SECRET, JWT_RESET_EXPIRE_IN, CLIENT_URL } from "../config/config.js
 import { transporter } from "../utils/email.js"
 import { createHashValue, isValidPasswd } from "../utils/encrypt.js";
 
+const logoutUser = async (req, res) => {
+    res.clearCookie('current')
+        .status(200)
+        .json({
+            message: 'You have logged out'
+        })
+}
+
+const loginUser = async (req, res) => {
+    const token = jsonwebtoken.sign(JSON.stringify(req.user), secret)
+
+    res.cookie("current", token, {
+        httpOnly: true,
+        secure: false,
+        signed: true,
+        maxAge: 1000 * 60 * 30 // 30 min
+    })
+
+    res.status(200).json({ status: "ok", message: "Ingresaste con exito" });
+}
+
 const getAllUsers = async (req, res) => {
     const users = await usersService.getAll();
     res.send({ status: "success", payload: users })
@@ -109,6 +130,8 @@ const togglePremiumCtrl = async (req, res) => {
 
 
 export default {
+    loginUser,
+    logoutUser,
     deleteUser,
     createUser,
     getAllUsers,

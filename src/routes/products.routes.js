@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { handlePolicies, productMdwPremium } from '../middleware/handle-policies.middleware.js';
+import { handlePolicies, productMdwPremium } from '../middleware/auth.middleware.js';
 import productsController from '../controllers/products.controller.js';
 
 const router = Router();

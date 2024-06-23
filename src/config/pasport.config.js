@@ -17,6 +17,7 @@ function extractJwtFromCookie(req) {
 }
 
 const initializePassport = () => {
+  
   passport.use(
     'current',
     new JWTStrategy(
