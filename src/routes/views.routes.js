@@ -164,4 +164,13 @@ router.get("/products", authenticate, async (req, res) => {
   }
 });
 
+router.get("/upload", authenticate, async (req, res) => {
+  const user = req.user;
+
+  res.render("upload", {
+    title: "Practica Integradora 3",
+    user: user,
+  })
+});
+
 export default router;

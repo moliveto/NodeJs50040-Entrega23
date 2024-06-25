@@ -115,19 +115,65 @@ const updatePassword = async (req, res) => {
     }
 }
 
-const togglePremiumCtrl = async (req, res) => {
-    userService.togglePremium(req.params.uid)
-        .then(user => {
-            if (user.role === "ADMIN") {
-                res.status(400).json({ status: "error", message: "No se puede cambiar el rol de un ADMIN" });
-            }
-            res.status(200).json({ status: "ok", message: `El Rol fue cambiado a ${user.role} con exito ` });
-        })
-        .catch(err => {
-            res.status(400).json({ status: "error", message: err.message });
-        });
-}
+const uploadDocumentCtrl = async (req, res) => {
+    try {
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({ status: "error", message: "No file uploaded" });
+        }
 
+        const uid = req.params.uid;
+        const filename = file.filename;
+
+        const user = await usersService.getUserById(uid);
+        if (!user) {
+            return res.status(404).json({ status: "error", message: "User not found" });
+        }
+
+        const filePath = `/docs/${filename}`; // Ruta del archivo (ajusta según sea necesario)
+        const documentToAdd = {
+            name: filename, // o cualquier otro nombre que quieras darle al documento
+            reference: filePath, // la ruta de acceso al archivo
+        };
+
+        user.documents.push(documentToAdd);
+
+        const uploadResult = await usersService.update(uid, user);
+
+        // Si todo sale bien, enviar una respuesta de éxito
+        return res.status(200).json({ status: "ok", message: "File uploaded successfully", data: uploadResult });
+    } catch (error) {
+        // Manejar cualquier error que ocurra durante la carga
+        return res.status(500).json({ status: "error", message: error.message });
+    }
+};
+
+const togglePremiumCtrl = async (req, res) => {
+    try {
+        const uid = req.params.uid;
+        const user = await usersService.getUserById(uid);
+        if (!user) {
+            return res.status(404).json({ status: "error", message: "User not found" });
+        }
+
+        if (user.role === "admin") {
+            res.status(400).json({ status: "error", message: "No se puede cambiar el rol de un ADMIN" });
+        }
+
+        if (user.documents.length === 0) {
+            res.status(400).json({ status: "error", message: "debe cargar documentacion para ser PREMIUM" });
+        }
+
+        user.role = "premium";
+        const updateResult = await usersService.update(uid, user);
+
+        // Si todo sale bien, enviar una respuesta de éxito
+        return res.status(200).json({ status: "ok", message: "User toogle premium successfully", data: updateResult });
+
+    } catch (error) {
+        return res.status(500).json({ status: "error", message: error.message });
+    }
+}
 
 export default {
     loginUser,
@@ -139,5 +185,6 @@ export default {
     updateUser,
     forgotPassword,
     updatePassword,
-    togglePremiumCtrl
+    togglePremiumCtrl,
+    uploadDocumentCtrl
 }

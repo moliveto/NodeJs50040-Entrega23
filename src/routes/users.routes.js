@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import usersController from '../controllers/users.controller.js';
 import { handlePolicies } from '../middleware/auth.middleware.js';
+import uploader from '../utils/uploader.js';
 
 const router = Router();
 
@@ -219,37 +220,22 @@ router.post("/resetpassword", usersController.forgotPassword)
 
 /**
  * @swagger
- * /api/users/updatepassword:
- *   put:
+ * /api/users/premium/{uid}:
+ *   post:
+ *     summary: Upgrade a user to premium status.
+ *     description: This endpoint upgrades the user identified by uid to premium status, granting them access to premium features.
  *     tags:
  *       - Users
- *     summary: Updates the user's password
- *     description: Allows a user to update their password. This typically follows a successful password reset request.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - token
- *               - newPassword
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 description: The user's email address.
- *               token:
- *                 type: string
- *                 description: The password reset token previously sent to the user's email.
- *               newPassword:
- *                 type: string
- *                 format: password
- *                 description: The new password for the user.
+ *     parameters:
+ *       - in: path
+ *         name: uid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the user to be upgraded.
  *     responses:
  *       '200':
- *         description: Password updated successfully.
+ *         description: User successfully upgraded to premium.
  *         content:
  *           application/json:
  *             schema:
@@ -257,9 +243,18 @@ router.post("/resetpassword", usersController.forgotPassword)
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Your password has been updated successfully.
+ *                   example: User upgraded to premium successfully.
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: 12345
+ *                     status:
+ *                       type: string
+ *                       example: premium
  *       '400':
- *         description: Bad request, such as missing parameters or parameters not meeting the requirements.
+ *         description: Bad request, such as invalid user ID.
  *         content:
  *           application/json:
  *             schema:
@@ -267,19 +262,9 @@ router.post("/resetpassword", usersController.forgotPassword)
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Missing parameters or parameters do not meet the requirements.
- *       '401':
- *         description: Unauthorized, such as invalid or expired token.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Invalid or expired token.
+ *                   example: Invalid user ID.
  *       '404':
- *         description: User not found with the provided email.
+ *         description: User not found.
  *         content:
  *           application/json:
  *             schema:
@@ -297,37 +282,33 @@ router.post("/resetpassword", usersController.forgotPassword)
  *               properties:
  *                 error:
  *                   type: string
- *                   example: An error occurred while processing the request.
+ *                   example: An error occurred while upgrading the user.
  */
-router.post("/updatepassword/:token", usersController.updatePassword)
+router.post("/premium/:uid", handlePolicies(['admin']), usersController.togglePremiumCtrl)
 
 /**
  * @swagger
- * /api/users/togglepremium:
- *   put:
+ * /upload/{uid}:
+ *   post:
+ *     summary: Uploads a document for a specific user.
+ *     description: Allows uploading a document file for the user identified by uid. This endpoint is typically used to upload necessary documentation for user accounts.
  *     tags:
  *       - Users
- *     summary: Toggles the premium status of a user
- *     description: Allows an admin to toggle the premium status of a user account. This endpoint should change the user's premium status from true to false or vice versa.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - userId
- *               - adminId
- *             properties:
- *               userId:
- *                 type: string
- *                 description: The ID of the user whose premium status is being toggled.
- *               adminId:
- *                 type: string
- *                 description: The ID of the admin performing the operation.
+ *     parameters:
+ *       - in: path
+ *         name: uid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID.
+ *       - in: formData
+ *         name: documentation
+ *         type: file
+ *         required: true
+ *         description: The document file to upload.
  *     responses:
  *       '200':
- *         description: Premium status toggled successfully.
+ *         description: Document uploaded successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -335,9 +316,18 @@ router.post("/updatepassword/:token", usersController.updatePassword)
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User's premium status has been successfully toggled.
+ *                   example: Document uploaded successfully.
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     fileName:
+ *                       type: string
+ *                       example: document.pdf
+ *                     filePath:
+ *                       type: string
+ *                       example: /uploads/documents/document.pdf
  *       '400':
- *         description: Bad request, such as missing parameters.
+ *         description: Bad request, such as missing file or invalid user ID.
  *         content:
  *           application/json:
  *             schema:
@@ -345,19 +335,9 @@ router.post("/updatepassword/:token", usersController.updatePassword)
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Missing parameters or invalid request.
- *       '401':
- *         description: Unauthorized, such as invalid admin ID.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: Unauthorized or invalid admin ID.
+ *                   example: Missing document file.
  *       '404':
- *         description: User not found with the provided ID.
+ *         description: User not found.
  *         content:
  *           application/json:
  *             schema:
@@ -376,7 +356,11 @@ router.post("/updatepassword/:token", usersController.updatePassword)
  *                 error:
  *                   type: string
  *                   example: An error occurred while processing the request.
+ *     consumes:
+ *       - multipart/form-data
+ *     produces:
+ *       - application/json
  */
-router.post("/premium/:uid", handlePolicies(['ADMIN']), usersController.togglePremiumCtrl)
+router.post("/upload/:uid", uploader.single('documentation'), usersController.uploadDocumentCtrl)
 
 export default router;

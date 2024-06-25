@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center mb-4">Cargar Documentación</h1>
+            <form action="/api/users/upload/{{user.id}}" method="post" enctype="multipart/form-data" class="mb-3">
+                <div class="form-group">
+                    <label for="documentationFile">Selecciona el archivo de documentación</label>
+                    <input type="file" class="form-control-file" id="documentationFile" name="documentation" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Cargar</button>
+            </form>
+        </div>
+    </div>
+</div>
